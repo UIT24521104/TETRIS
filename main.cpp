@@ -7,7 +7,7 @@ using namespace std;
 
 // Hằng số định nghĩa ký tự gạch (ASCII 219 - hình khối đặc)
 const char BLOCK = char(219); 
-
+char board[H][W] = {}; // Ma trận lưu trạng thái phòng chơi
 /**
  * Tác dụng: Tắt chế độ chờ phím Enter (Line Input) và tắt hiển thị ký tự khi gõ (Echo).
  * Giúp game nhận điều khiển mượt mà (Real-time input).
