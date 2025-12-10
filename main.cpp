@@ -1,6 +1,9 @@
 #include <iostream>
 // Các thư viện khác...
 using namespace std;
+#define H 20
+
+#define W 15 
 
 // Hằng số định nghĩa ký tự gạch (ASCII 219 - hình khối đặc)
 const char BLOCK = char(219); 
