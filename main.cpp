@@ -46,6 +46,32 @@ void draw(){
         cout << "\n";
 
 }
+    // Hiển thị thông tin
+
+    cout << "\n";
+
+    cout << "Score: " << score << "        Next: ";
+
+    char nextBlockName[] = { 'I', 'O', 'T', 'S', 'Z', 'J', 'L' };
+
+    if (nextBlock >= 0 && nextBlock < 7) {
+
+        cout << nextBlockName[nextBlock];
+
+    }
+
+    cout << "\n";
+
+
+
+    cout << "Controls: A/D=Move  S=Down  W=Rotate  Q=Quit\n";
+
+
+
+    cout.flush();
+
+}
+
 
 /**
  * Tác dụng: Kiểm tra xem nếu dịch chuyển thêm (dx, dy) thì có va chạm biên hoặc gạch cũ không.
