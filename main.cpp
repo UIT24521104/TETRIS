@@ -29,52 +29,7 @@ void block2Board(){}
 /**
  * Tác dụng: Xóa màn hình và vẽ lại toàn bộ trạng thái game (Board, Điểm số, Next Block).
  */
-void draw(){
-    // Xóa màn hình
-
-    system("cls");
-
-
-
-    // Vẽ phòng chơi (✅ giờ vẽ hết chiều cao H)
-
-    for (int i = 0; i < VIEWPORT_HEIGHT && i < H; i++) {
-
-        for (int j = 0; j < W; j++) {
-
-            cout << board[i][j] << board[i][j];
-
-        }
-
-        cout << "\n";
-
-}
-    // Hiển thị thông tin
-
-    cout << "\n";
-
-    cout << "Score: " << score << "        Next: ";
-
-    char nextBlockName[] = { 'I', 'O', 'T', 'S', 'Z', 'J', 'L' };
-
-    if (nextBlock >= 0 && nextBlock < 7) {
-
-        cout << nextBlockName[nextBlock];
-
-    }
-
-    cout << "\n";
-
-
-
-    cout << "Controls: A/D=Move  S=Down  W=Rotate  Q=Quit\n";
-
-
-
-    cout.flush();
-
-}
-
+void draw(){}
 
 /**
  * Tác dụng: Kiểm tra xem nếu dịch chuyển thêm (dx, dy) thì có va chạm biên hoặc gạch cũ không.
@@ -100,14 +55,6 @@ bool isGameOver() {}
 /**
  * Tác dụng: Khởi tạo game, vòng lặp chính xử lý Input, Logic rơi tự động và điều phối các hàm con.
  */
-void gotoxy(int x, int y) {
-
-    COORD c = { (SHORT)x, (SHORT)y };
-
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c);
-
-}
-
 int main(){
     return 0;
 }
