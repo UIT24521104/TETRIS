@@ -52,13 +52,7 @@ bool isGameOver() {}
 /**
  * Tác dụng: Khởi tạo game, vòng lặp chính xử lý Input, Logic rơi tự động và điều phối các hàm con.
  */
-void gotoxy(int x, int y) {
-
-    COORD c = { (SHORT)x, (SHORT)y };
-
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c);
-
-}
+void gotoxy(int x, int y) {}
 
 int main(){
     return 0;
