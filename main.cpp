@@ -12,6 +12,7 @@
 #define VIEWPORT_HEIGHT 20 
 
 const char BLOCK = char(219);
+int speed = 200;
 char board[H][W] = {};
 int score = 0;
 
@@ -207,7 +208,7 @@ int main(){
         }
         block2Board();
         draw();
-        Sleep(200);  
+        Sleep(speed);  
     }
     return 0;
 }
