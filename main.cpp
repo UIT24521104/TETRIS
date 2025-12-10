@@ -1,59 +1,213 @@
 #include <iostream>
-// Các thư viện khác...
+#include <conio.h>
+#include <windows.h>
+#include <ctime>
+#include <cstdlib>
+#include <string>
+#include <cctype>
+#include <algorithm> 
+
+#define H 20
+#define W 15
+#define VIEWPORT_HEIGHT 20 
+
+const char BLOCK = char(219);
+char board[H][W] = {};
+int score = 0;
+
 using namespace std;
 
-// Hằng số định nghĩa ký tự gạch (ASCII 219 - hình khối đặc)
-const char BLOCK = char(219); 
+void enableRawMode() {
+    HANDLE hIn = GetStdHandle(STD_INPUT_HANDLE);
+    DWORD mode = 0;
+    GetConsoleMode(hIn, &mode);
+    mode &= ~(ENABLE_LINE_INPUT | ENABLE_ECHO_INPUT);
+    mode &= ~ENABLE_QUICK_EDIT_MODE;
+    SetConsoleMode(hIn, mode);
+}
 
-/**
- * Tác dụng: Tắt chế độ chờ phím Enter (Line Input) và tắt hiển thị ký tự khi gõ (Echo).
- * Giúp game nhận điều khiển mượt mà (Real-time input).
- */
-void enableRawMode() {}
+char blocks[2][4][4][4] = {
+    // 1: I
+    {
+        {{' ',BLOCK,' ',' '}, {' ',BLOCK,' ',' '}, {' ',BLOCK,' ',' '}, {' ',BLOCK,' ',' '}},
+        {{' ',' ',' ',' '}, {BLOCK,BLOCK,BLOCK,BLOCK}, {' ',' ',' ',' '}, {' ',' ',' ',' '}},
+        {{' ',BLOCK,' ',' '}, {' ',BLOCK,' ',' '}, {' ',BLOCK,' ',' '}, {' ',BLOCK,' ',' '}},
+        {{' ',' ',' ',' '}, {BLOCK,BLOCK,BLOCK,BLOCK}, {' ',' ',' ',' '}, {' ',' ',' ',' '}}
+    },
 
-/**
- * Tác dụng: Xóa vị trí hiện tại của khối gạch trên ma trận board.
- * Dùng để làm sạch bóng cũ trước khi khối di chuyển sang vị trí mới.
- */
-void boardDelBlock(){}
+    // 2: O
+    {
+        {{' ',' ',' ',' '}, {' ',BLOCK,BLOCK,' '}, {' ',BLOCK,BLOCK,' '}, {' ',' ',' ',' '}},
+        {{' ',' ',' ',' '}, {' ',BLOCK,BLOCK,' '}, {' ',BLOCK,BLOCK,' '}, {' ',' ',' ',' '}},
+        {{' ',' ',' ',' '}, {' ',BLOCK,BLOCK,' '}, {' ',BLOCK,BLOCK,' '}, {' ',' ',' ',' '}},
+        {{' ',' ',' ',' '}, {' ',BLOCK,BLOCK,' '}, {' ',BLOCK,BLOCK,' '}, {' ',' ',' ',' '}}
+    },
+};
 
-/**
- * Tác dụng: Ghi khối gạch (tại tọa độ x, y) vào ma trận board.
- * Dùng để vẽ khối gạch đang rơi hoặc "đóng băng" khối gạch khi chạm đáy.
- */
-void block2Board(){}
+int x = 4, y = 0, b = 1;
+int rotation = 0;
+int nextBlock = -1;
 
-/**
- * Tác dụng: Xóa màn hình và vẽ lại toàn bộ trạng thái game (Board, Điểm số, Next Block).
- */
-void draw(){}
+void gotoxy(int x, int y) {
+    COORD c = {(SHORT)x, (SHORT)y};
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c);
+}
 
-/**
- * Tác dụng: Kiểm tra xem nếu dịch chuyển thêm (dx, dy) thì có va chạm biên hoặc gạch cũ không.
- * Trả về: true nếu đi được, false nếu bị chặn.
- */
-bool canMove() {}
+void initBoard(){
+    for (int i = 0 ; i < H ; i++){
+        for (int j = 0 ; j < W ; j++){
+            if(i == H-1 || j == 0 || j == W - 1) {
+                board[i][j] = char(35);
+            }
+            else
+                board[i][j] = ' ';
+        }
+    }
+}
 
-/**
- * Tác dụng: Mô phỏng thử góc xoay tiếp theo xem có bị kẹt vào tường hay đè lên gạch khác không.
- */
-bool canRotate() {}
+void boardDelBlock(){
+    for (int i = 0 ; i < 4 ; i++){
+        for (int j = 0 ; j < 4 ; j++){
+            if (blocks[b][rotation][i][j] != ' '){
+                int ty = y + i;
+                int tx = x + j;
+                if (ty >= 0 && ty < H && tx >= 1 && tx < W-1){
+                    board[ty][tx] = ' ';
+                }
+            }
+        }
+    }
+}
 
-/**
- * Tác dụng: Tính toán góc mới và cập nhật biến rotation nếu canRotate() trả về true.
- */
-void rotateBlock() {}
+void block2Board(){
+    for (int i = 0 ; i < 4 ; i++){
+        for (int j = 0 ; j < 4 ; j++){
+            if (blocks[b][rotation][i][j] != ' '){
+                int ty = y + i;
+                int tx = x + j;
+                if (ty >= 0 && ty < H && tx >= 1 && tx < W-1){
+                    board[ty][tx] = BLOCK;
+                }
+            }
+        }
+    }
+}
 
-/**
- * Tác dụng: Quét hàng trên cùng (dòng 0), nếu có gạch (BLOCK) xuất hiện -> Game Over.
- */
-bool isGameOver() {}
+void draw(){
+    system("cls");
+    for (int i = 0; i < VIEWPORT_HEIGHT && i < H; i++){
+        for (int j = 0; j < W; j++){
+            cout << board[i][j] << board[i][j];
+        }
+        cout << "\n";
+    } 
+    cout << "\n";
+    cout << "Score: " << score << "        Next: ";
+    char nextBlockName[] = {'I', 'O', 'T', 'S', 'Z', 'J', 'L'};
+    if (nextBlock >= 0 && nextBlock < 7) {
+        cout << nextBlockName[nextBlock];
+    }
+    cout << "\n";
+    cout << "Controls: A/D=Move  S=Down  W=Rotate  Q=Quit\n";
+    cout.flush();
+}
 
-/**
- * Tác dụng: Khởi tạo game, vòng lặp chính xử lý Input, Logic rơi tự động và điều phối các hàm con.
- */
-void gotoxy(int x, int y) {}
+bool canMove(int dx, int dy){
+    for (int i = 0 ; i < 4 ; i++){
+        for (int j = 0 ; j < 4 ; j++){
+            if (blocks[b][rotation][i][j] != ' '){
+                int tx = x + j + dx;
+                int ty = y + i + dy;
+                if (tx < 1 || tx >= W-1 || ty >= H-1) return false;
+                if (ty >= 0 && (board[ty][tx] == char(35) || board[ty][tx] == BLOCK)) return false;
+            }
+        }
+    }
+    return true;
+}
+
+int getBlockMaxCol(int blockIndex) {
+    int maxCol = -1;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            if (blocks[blockIndex][0][i][j] != ' ') {
+                maxCol = std::max(maxCol, j);
+            }
+        }
+    }
+    return maxCol + 1;
+}
+
+int getRandomX(int blockIndex) {
+    int blockMaxCol = getBlockMaxCol(blockIndex);
+    int maxX = W - 1 - blockMaxCol;
+    if (maxX < 1) maxX = 1;
+    return 1 + rand() % maxX;
+}
+
+bool isGameOver() {
+    for (int j = 1; j < W - 1; j++) {
+        if (board[0][j] == BLOCK) {
+            return true;
+        }
+    }
+    return false;
+}
 
 int main(){
+    enableRawMode();
+    system("chcp 437 >nul");
+    SetConsoleOutputCP(437);
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO cursorInfo;
+    GetConsoleCursorInfo(hOut, &cursorInfo);
+    cursorInfo.bVisible = FALSE;
+    SetConsoleCursorInfo(hOut, &cursorInfo);
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    system("cls");
+    srand((unsigned)time(0));
+    initBoard();
+    b = rand() % 2;
+    nextBlock = rand() % 2;
+    rotation = 0;
+    x = getRandomX(b);
+    y = 0;
+    int fallcounter = 0;
+    bool gameOver = false;
+    while (!gameOver){
+        boardDelBlock();
+        if (_kbhit()){
+            unsigned char ch = _getch();
+            char c = tolower(ch);
+            if (c == 'a') {
+                if (canMove(-1, 0)) x--;
+            }
+            else if (c == 'd') {
+                if (canMove(1, 0)) x++;
+            }
+            else if (c == 's') {
+                if (canMove(0, 1)) y++;
+            }
+            else if (c == 'q') {
+                gameOver = true;
+                break;
+            }
+        }
+        if (canMove(0, 1)) {
+            y++;
+        }
+        else {
+            block2Board();
+            b = nextBlock;
+            nextBlock = rand() % 2;
+            rotation = 0;
+            x = getRandomX(b);
+            y = 0;
+        }
+        block2Board();
+        draw();
+        Sleep(200);  
+    }
     return 0;
 }
