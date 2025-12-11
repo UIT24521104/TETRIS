@@ -18,8 +18,6 @@ int speed = 200;
 char board[H][W] = {};
 int score = 0;
 
-
-
 void enableRawMode() {
     HANDLE hIn = GetStdHandle(STD_INPUT_HANDLE);
     DWORD mode = 0;
@@ -38,7 +36,6 @@ char blocks[2][4][4][4] = {
         {{' ',' ',' ',' '}, {BLOCK,BLOCK,BLOCK,BLOCK}, {' ',' ',' ',' '}, {' ',' ',' ',' '}}
     },
 
-    
     {
         {{' ',' ',' ',' '}, {' ',BLOCK,BLOCK,' '}, {' ',BLOCK,BLOCK,' '}, {' ',' ',' ',' '}},
         {{' ',' ',' ',' '}, {' ',BLOCK,BLOCK,' '}, {' ',BLOCK,BLOCK,' '}, {' ',' ',' ',' '}},
@@ -144,16 +141,12 @@ for (int i = 0 ; i < 4 ; i++){
     return true;
 }
 
-
 void rotateBlock() {
     int newRotation = (rotation + 1) % 4;
     if (canRotate(newRotation)) {
         rotation = newRotation;
     }
 }
-
-
-
 
 int getBlockMaxCol(int blockIndex) {
     int maxCol = -1;
@@ -187,19 +180,15 @@ int main(){
     enableRawMode();
     system("chcp 437 >nul");
     SetConsoleOutputCP(437);
-    
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO cursorInfo;
     GetConsoleCursorInfo(hOut, &cursorInfo);
     cursorInfo.bVisible = FALSE;
     SetConsoleCursorInfo(hOut, &cursorInfo);
-    
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     system("cls");
     srand((unsigned)time(0));
-
-    
     initBoard();
     b = rand() % 2;
     nextBlock = rand() % 2;
@@ -208,8 +197,6 @@ int main(){
     y = 0;
     int fallcounter = 0;
     bool gameOver = false;
-
-    
     while (!gameOver){
         boardDelBlock();
         if (_kbhit()){
