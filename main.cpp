@@ -145,6 +145,16 @@ for (int i = 0 ; i < 4 ; i++){
 }
 
 
+void rotateBlock() {
+    int newRotation = (rotation + 1) % 4;
+    if (canRotate(newRotation)) {
+        rotation = newRotation;
+    }
+}
+
+
+
+
 int getBlockMaxCol(int blockIndex) {
     int maxCol = -1;
     for (int i = 0; i < 4; i++) {
