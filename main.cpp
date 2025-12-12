@@ -184,6 +184,19 @@ void removeLine() {
                 break;
             }
         }
+        if (full) {
+            for (int k = i; k > 0; k--) {
+                for (int j = 1; j < W - 1; j++) {
+                    board[k][j] = board[k - 1][j];
+                }
+            }
+            for (int j = 1; j < W - 1; j++) {
+                board[0][j] = ' ';
+            }
+            score += 100;
+            i++;
+        }
+    }
 
 }
 
