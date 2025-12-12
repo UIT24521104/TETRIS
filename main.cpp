@@ -211,6 +211,9 @@ int main(){
             else if (c == 's') {
                 if (canMove(0, 1)) y++;
             }
+            else if (c == 'w') {
+                rotateBlock();
+            }
             else if (c == 'q') {
                 gameOver = true;
                 break;
