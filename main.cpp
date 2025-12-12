@@ -216,7 +216,7 @@ int main(){
                 break;
             }
         }
-        
+        fallCounter++;
         if (fallCounter >= speed / 30) {
             if (canMove(0, 1)) {
                 y++;
