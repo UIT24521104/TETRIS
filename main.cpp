@@ -90,14 +90,20 @@ void gotoxy(int x, int y) {
 void initBoard(){
     for (int i = 0 ; i < H ; i++){
         for (int j = 0 ; j < W ; j++){
-            if(i == H-1 || j == 0 || j == W - 1) {
-                board[i][j] = char(35);
+            if(i == H-1) {
+                if(j==0) board[i][j] = char(200);
+                else if(j==W-1) board[i][j] = char(188);
+                else board[i][j] = char(205);
             }
+            else if ((j == 0) || (j == W-1))
+                board[i][j] = char(186);
             else
                 board[i][j] = ' ';
         }
     }
 }
+
+
 
 void boardDelBlock(){
     for (int i = 0 ; i < 4 ; i++){
