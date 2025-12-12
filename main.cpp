@@ -246,6 +246,7 @@ int main(){
         }
         else {
             block2Board();
+			removeLine();
             b = nextBlock;
             nextBlock = rand() % 2;
             rotation = 0;
