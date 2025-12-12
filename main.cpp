@@ -175,7 +175,17 @@ bool isGameOver() {
     }
     return false;
 }
-void removeLine() {}
+void removeLine() {
+    for (int i = H - 2; i >= 1; i--) {
+        bool full = true;
+        for (int j = 1; j < W - 1; j++) {
+            if (board[i][j] != BLOCK) {
+                full = false;
+                break;
+            }
+        }
+
+}
 
 
 int main(){
