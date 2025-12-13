@@ -221,7 +221,7 @@ int main(){
         }
         else {
             block2Board();
-                removeLine();
+                
                 if (isGameOver()) {
                     draw();
                     cout << "\n========== GAME OVER ==========" << endl;
@@ -247,13 +247,6 @@ int main(){
                     gameOver = true;
                     break;
                 }
-                
-            }
-            
-
-
-
-            
         }
         block2Board();
         draw();
