@@ -221,11 +221,39 @@ int main(){
         }
         else {
             block2Board();
-            b = nextBlock;
-            nextBlock = rand() % 2;
-            rotation = 0;
-            x = getRandomX(b);
-            y = 0;
+                removeLine();
+                if (isGameOver()) {
+                    draw();
+                    cout << "\n========== GAME OVER ==========" << endl;
+                    cout << "Final Score: " << score << endl;
+                    cout << "================================" << endl;
+                    cout << "Press any key to exit..." << endl;
+                    _getch();
+                    gameOver = true;
+                    break;
+                }
+                b = nextBlock;
+                nextBlock = rand() % 7;
+                rotation = 0;
+                x = getRandomX(b);
+                y = 0;
+                if (!canMove(0, 0)) {
+                    draw();
+                    cout << "\n========== GAME OVER ==========" << endl;
+                    cout << "Final Score: " << score << endl;
+                    cout << "================================" << endl;
+                    cout << "Press any key to exit..." << endl;
+                    _getch();
+                    gameOver = true;
+                    break;
+                }
+                
+            }
+            
+
+
+
+            
         }
         block2Board();
         draw();
