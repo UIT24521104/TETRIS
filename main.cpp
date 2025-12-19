@@ -260,7 +260,7 @@ int main(){
     rotation = 0;
     x = getRandomX(b);
     y = 0;
-    int fallcounter = 0;
+    int fallCounter = 0;
     bool gameOver = false;
     while (!gameOver){
         boardDelBlock();
@@ -284,11 +284,21 @@ int main(){
                 break;
             }
         }
-        if (canMove(0, 1)) {
-            y++;
-        }
-        else {
+        fallCounter++;
+        if (fallCounter >= speed / 30) {
+            if (canMove(0, 1)) {
+                y++;
+            }
+            else {
             block2Board();
+            b = nextBlock;
+            nextBlock = rand() % 2;
+            rotation = 0;
+            x = getRandomX(b);
+            y = 0;
+
+            }
+            fallCounter = 0;
                 
                 if (isGameOver()) {
                     draw();
@@ -318,7 +328,7 @@ int main(){
         }
         block2Board();
         draw();
-        Sleep(speed);  
+        Sleep(30);  
     }
     return 0;
 }
