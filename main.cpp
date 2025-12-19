@@ -27,7 +27,7 @@ void enableRawMode() {
     SetConsoleMode(hIn, mode);
 }
 
-char blocks[2][4][4][4] = {
+char blocks[7][4][4][4] = {
     
     {
         {{' ',BLOCK,' ',' '}, {' ',BLOCK,' ',' '}, {' ',BLOCK,' ',' '}, {' ',BLOCK,' ',' '}},
@@ -42,6 +42,40 @@ char blocks[2][4][4][4] = {
         {{' ',' ',' ',' '}, {' ',BLOCK,BLOCK,' '}, {' ',BLOCK,BLOCK,' '}, {' ',' ',' ',' '}},
         {{' ',' ',' ',' '}, {' ',BLOCK,BLOCK,' '}, {' ',BLOCK,BLOCK,' '}, {' ',' ',' ',' '}}
     },
+    {
+        {{' ',' ',' ',' '}, {' ',BLOCK,' ',' '}, {BLOCK,BLOCK,BLOCK,' '}, {' ',' ',' ',' '}},
+        {{' ',' ',' ',' '}, {' ',BLOCK,' ',' '}, {' ',BLOCK,BLOCK,' '}, {' ',BLOCK,' ',' '}},
+        {{' ',' ',' ',' '}, {' ',' ',' ',' '}, {BLOCK,BLOCK,BLOCK,' '}, {' ',BLOCK,' ',' '}},
+        {{' ',' ',' ',' '}, {' ',BLOCK,' ',' '}, {BLOCK,BLOCK,' ',' '}, {' ',BLOCK,' ',' '}}
+    },
+    {
+        {{' ',' ',' ',' '}, {' ',BLOCK,BLOCK,' '}, {BLOCK,BLOCK,' ',' '}, {' ',' ',' ',' '}},
+        {{' ',' ',' ',' '}, {' ',BLOCK,' ',' '}, {' ',BLOCK,BLOCK,' '}, {' ',' ',BLOCK,' '}},
+        {{' ',' ',' ',' '}, {' ',BLOCK,BLOCK,' '}, {BLOCK,BLOCK,' ',' '}, {' ',' ',' ',' '}},
+        {{' ',' ',' ',' '}, {' ',BLOCK,' ',' '}, {' ',BLOCK,BLOCK,' '}, {' ',' ',BLOCK,' '}}
+    },
+    {
+        {{' ',' ',' ',' '}, {BLOCK,BLOCK,' ',' '}, {' ',BLOCK,BLOCK,' '}, {' ',' ',' ',' '}},
+        {{' ',' ',' ',' '}, {' ',' ',BLOCK,' '}, {' ',BLOCK,BLOCK,' '}, {' ',BLOCK,' ',' '}},
+        {{' ',' ',' ',' '}, {BLOCK,BLOCK,' ',' '}, {' ',BLOCK,BLOCK,' '}, {' ',' ',' ',' '}},
+        {{' ',' ',' ',' '}, {' ',' ',BLOCK,' '}, {' ',BLOCK,BLOCK,' '}, {' ',BLOCK,' ',' '}}
+
+    },
+     {
+        {{' ',' ',' ',' '}, {BLOCK,' ',' ',' '}, {BLOCK,BLOCK,BLOCK,' '}, {' ',' ',' ',' '}},
+        {{' ',' ',' ',' '}, {' ',BLOCK,BLOCK,' '}, {' ',BLOCK,' ',' '}, {' ',BLOCK,' ',' '}},
+        {{' ',' ',' ',' '}, {' ',' ',' ',' '}, {BLOCK,BLOCK,BLOCK,' '}, {' ',' ',BLOCK,' '}},
+        {{' ',' ',' ',' '}, {' ',BLOCK,' ',' '}, {' ',BLOCK,' ',' '}, {BLOCK,BLOCK,' ',' '}}
+    },
+    {
+        {{' ',' ',' ',' '}, {' ',' ',BLOCK,' '}, {BLOCK,BLOCK,BLOCK,' '}, {' ',' ',' ',' '}},
+        {{' ',' ',' ',' '}, {' ',BLOCK,' ',' '}, {' ',BLOCK,' ',' '}, {' ',BLOCK,BLOCK,' '}},
+        {{' ',' ',' ',' '}, {' ',' ',' ',' '}, {BLOCK,BLOCK,BLOCK,' '}, {BLOCK,' ',' ',' '}},
+        {{' ',' ',' ',' '}, {BLOCK,BLOCK,' ',' '}, {' ',BLOCK,' ',' '}, {' ',BLOCK,' ',' '}}
+
+    }
+
+
 };
 
 int x = 4, y = 0, b = 1;
@@ -56,14 +90,20 @@ void gotoxy(int x, int y) {
 void initBoard(){
     for (int i = 0 ; i < H ; i++){
         for (int j = 0 ; j < W ; j++){
-            if(i == H-1 || j == 0 || j == W - 1) {
-                board[i][j] = char(35);
+            if(i == H-1) {
+                if(j==0) board[i][j] = char(200);
+                else if(j==W-1) board[i][j] = char(188);
+                else board[i][j] = char(205);
             }
+            else if ((j == 0) || (j == W-1))
+                board[i][j] = char(186);
             else
                 board[i][j] = ' ';
         }
     }
 }
+
+
 
 void boardDelBlock(){
     for (int i = 0 ; i < 4 ; i++){
@@ -175,6 +215,31 @@ bool isGameOver() {
     }
     return false;
 }
+void removeLine() {
+    for (int i = H - 2; i >= 1; i--) {
+        bool full = true;
+        for (int j = 1; j < W - 1; j++) {
+            if (board[i][j] != BLOCK) {
+                full = false;
+                break;
+            }
+        }
+        if (full) {
+            for (int k = i; k > 0; k--) {
+                for (int j = 1; j < W - 1; j++) {
+                    board[k][j] = board[k - 1][j];
+                }
+            }
+            for (int j = 1; j < W - 1; j++) {
+                board[0][j] = ' ';
+            }
+            score += 100;
+            i++;
+        }
+    }
+
+}
+
 
 int main(){
     enableRawMode();
@@ -190,8 +255,8 @@ int main(){
     system("cls");
     srand((unsigned)time(0));
     initBoard();
-    b = rand() % 2;
-    nextBlock = rand() % 2;
+    b = rand() % 7;
+    nextBlock = rand() % 7;
     rotation = 0;
     x = getRandomX(b);
     y = 0;
@@ -210,6 +275,9 @@ int main(){
             }
             else if (c == 's') {
                 if (canMove(0, 1)) y++;
+            }
+            else if (c == 'w') {
+                rotateBlock();
             }
             else if (c == 'q') {
                 gameOver = true;
