@@ -251,31 +251,6 @@ bool isGameOver() {
     return false;
 }
 
-void removeLine() {
-    for (int i = H - 2; i >= 1; i--) {
-        bool full = true;
-        for (int j = 1; j < W - 1; j++) {
-            if (board[i][j] != BLOCK) {
-                full = false;
-                break;
-            }
-        }
-        if (full) {
-            for (int k = i; k > 0; k--) {
-                for (int j = 1; j < W - 1; j++) {
-                    board[k][j] = board[k - 1][j];
-                }
-            }
-            for (int j = 1; j < W - 1; j++) {
-                board[0][j] = ' ';
-            }
-            score += 100;
-            i++;
-        }
-    }
-
-}
-
 int main(){
     enableRawMode();
     system("chcp 437 >nul");
@@ -330,7 +305,6 @@ int main(){
             }
             else {
                 currentPiece->updateOnBoard();
-                removeLine();
                 if (isGameOver()) {
                     draw();
                     cout << "\n========== GAME OVER ==========" << endl;
