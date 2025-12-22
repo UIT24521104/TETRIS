@@ -4,8 +4,6 @@
 #include <ctime>
 #include <cstdlib>
 #include <string>
-#include <cctype>
-#include <algorithm> 
 
 #define H 20
 #define W 15
@@ -173,34 +171,6 @@ void initBoard(){
     }
 }
 
-void boardDelBlock(){
-    for (int i = 0 ; i < 4 ; i++){
-        for (int j = 0 ; j < 4 ; j++){
-            if (blocks[b][rotation][i][j] != ' '){
-                int ty = y + i;
-                int tx = x + j;
-                if (ty >= 0 && ty < H && tx >= 1 && tx < W-1){
-                    board[ty][tx] = ' ';
-                }
-            }
-        }
-    }
-}
-
-void block2Board(){
-    for (int i = 0 ; i < 4 ; i++){
-        for (int j = 0 ; j < 4 ; j++){
-            if (blocks[b][rotation][i][j] != ' '){
-                int ty = y + i;
-                int tx = x + j;
-                if (ty >= 0 && ty < H && tx >= 1 && tx < W-1){
-                    board[ty][tx] = BLOCK;
-                }
-            }
-        }
-    }
-}
-
 void draw(){
     system("cls");
     for (int i = 0; i < VIEWPORT_HEIGHT && i < H; i++){
@@ -218,54 +188,6 @@ void draw(){
     cout << "\n";
     cout << "Controls: A/D=Move  S=Down  W=Rotate  Q=Quit\n";
     cout.flush();
-}
-
-bool canMove(int dx, int dy){
-    for (int i = 0 ; i < 4 ; i++){
-        for (int j = 0 ; j < 4 ; j++){
-            if (blocks[b][rotation][i][j] != ' '){
-                int tx = x + j + dx;
-                int ty = y + i + dy;
-                if (tx < 1 || tx >= W-1 || ty >= H-1) return false;
-                if (ty >= 0 && (board[ty][tx] == char(35) || board[ty][tx] == BLOCK)) return false;
-            }
-        }
-    }
-    return true;
-}
-
-bool canRotate(int newRotation) {
-for (int i = 0 ; i < 4 ; i++){
-        for (int j = 0 ; j < 4 ; j++){
-            if (blocks[b][newRotation][i][j] != ' '){
-                int tx = x + j;
-                int ty = y + i;
-                if (tx < 1 || tx >= W-1 || ty >= H-1) return false;
-                if (ty >= 0 && (board[ty][tx] == '#' || board[ty][tx] == BLOCK))
-                    return false;
-            }
-        }
-    }
-    return true;
-}
-
-void rotateBlock() {
-    int newRotation = (rotation + 1) % 4;
-    if (canRotate(newRotation)) {
-        rotation = newRotation;
-    }
-}
-
-int getBlockMaxCol(int blockIndex) {
-    int maxCol = -1;
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
-            if (blocks[blockIndex][0][i][j] != ' ') {
-                maxCol = max(maxCol, j);
-            }
-        }
-    }
-    return maxCol + 1;
 }
 
 int getRandomX(int blockIndex) {
