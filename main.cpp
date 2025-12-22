@@ -307,16 +307,19 @@ int main(){
             unsigned char ch = _getch();
             char c = tolower(ch);
             if (c == 'a') {
-                if (canMove(-1, 0)) x--;
+                if (currentPiece->canMove(-1, 0)) {
+                    currentPiece->setPos(currentPiece->getX() - 1, currentPiece->getY());
+                }
             }
             else if (c == 'd') {
-                if (canMove(1, 0)) x++;
+                if (currentPiece->canMove(1, 0)) {
+                    currentPiece->setPos(currentPiece->getX() + 1, currentPiece->getY());
+                }
             }
             else if (c == 's') {
-                if (canMove(0, 1)) y++;
-            }
-            else if (c == 'w') {
-                rotateBlock();
+                if (currentPiece->canMove(0, 1)) {
+                    currentPiece->setPos(currentPiece->getX(), currentPiece->getY() + 1);
+                }
             }
             else if (c == 'q') {
                 gameOver = true;
@@ -325,8 +328,8 @@ int main(){
         }
         fallCounter++;
         if (fallCounter >= speed / 30) {
-            if (canMove(0, 1)) {
-                y++;
+            if (currentPiece->canMove(0, 1)) {
+                currentPiece->setPos(currentPiece->getX(), currentPiece->getY() + 1);
             }
             else {
                 currentPiece->updateOnBoard();
@@ -346,7 +349,7 @@ int main(){
                 rotation = 0;
                 x = getRandomX(b);
                 y = 0;
-                if (!canMove(0, 0)) {
+                if (!currentPiece->canMove(0, 0)) {
                     draw();
                     cout << "\n========== GAME OVER ==========" << endl;
                     cout << "Final Score: " << score << endl;
