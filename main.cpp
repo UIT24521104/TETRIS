@@ -12,9 +12,10 @@
 using namespace std;
 
 const char BLOCK = char(219);
-int speed = 200;
+int speed = 200, nextBlock = -1;
 char board[H][W] = {};
 int score = 0;
+int x, y, rotation, b;
 
 void enableRawMode() {
     HANDLE hIn = GetStdHandle(STD_INPUT_HANDLE);
@@ -194,10 +195,6 @@ char BlockL::data[4][4][4] = {
     {{' ',' ',' ',' '}, {BLOCK,BLOCK,' ',' '}, {' ',BLOCK,' ',' '}, {' ',BLOCK,' ',' '}}
 };
 
-int x = 4, y = 0, b = 1;
-int rotation = 0;
-int nextBlock = -1;
-
 void gotoxy(int x, int y) {
     COORD c = {(SHORT)x, (SHORT)y};
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c);
@@ -279,7 +276,6 @@ void removeLine() {
 
 }
 
-
 int main(){
     enableRawMode();
     system("chcp 437 >nul");
@@ -294,11 +290,12 @@ int main(){
     system("cls");
     srand((unsigned)time(0));
     initBoard();
-    b = rand() % 7;
     nextBlock = rand() % 7;
+    b = nextBlock;
     rotation = 0;
     x = getRandomX(b);
     y = 0;
+
     int fallCounter = 0;
     bool gameOver = false;
     while (!gameOver){
