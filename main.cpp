@@ -257,6 +257,27 @@ bool isGameOver() {
     }
     return false;
 }
+bool canRotate() {
+    int nextRotation = (rotation + 1) % 4;
+    int oldRotation = rotation;
+    rotation = nextRotation;
+
+    bool possible = true;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            if (getBlock(i, j) != ' ') {
+                int tx = x + j;
+                int ty = y + i;
+                if (tx < 1 || tx >= W - 1 || ty >= H - 1 || (ty >= 0 && board[ty][tx] == BLOCK)) {
+                    possible = false;
+                    break;
+                }
+            }
+        }
+    }
+    rotation = oldRotation;
+    return possible;
+}
 
 void rotate() {
         rotation = (rotation + 1) % 4;
