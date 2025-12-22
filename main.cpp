@@ -229,14 +229,17 @@ void initBoard(){
 }
 
 void draw(){
-    system("cls");
-    for (int i = 0; i < VIEWPORT_HEIGHT && i < H; i++){
-        for (int j = 0; j < W; j++){
-            cout << board[i][j] << board[i][j];
+    gotoxy(0, 0); 
+    for (int i = 0; i < H; i++) {
+        for (int j = 0; j < W; j++) {
+            if (board[i][j] == BLOCK) {
+                cout << board[i][j] << board[i][j];
+            } else {
+                cout << board[i][j] << board[i][j];
+            }
         }
         cout << "\n";
-    } 
-    cout << "\n";
+    }
     cout << "Score: " << score << "        Next: ";
     char nextBlockName[] = {'I', 'O', 'T', 'S', 'Z', 'J', 'L'};
     if (nextBlock >= 0 && nextBlock < 7) {
