@@ -194,6 +194,19 @@ char BlockL::data[4][4][4] = {
     {{' ',' ',' ',' '}, {BLOCK,BLOCK,' ',' '}, {' ',BLOCK,' ',' '}, {' ',BLOCK,' ',' '}}
 };
 
+Block* spawnBlock(int type) {
+    switch (type) {
+        case 0: return new BlockI();
+        case 1: return new BlockO();
+        case 2: return new BlockT();
+        case 3: return new BlockS();
+        case 4: return new BlockZ();
+        case 5: return new BlockJ();
+        case 6: return new BlockL();
+        default: return new BlockI();
+    }
+}
+
 void gotoxy(int x, int y) {
     COORD c = {(SHORT)x, (SHORT)y};
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c);
@@ -267,6 +280,7 @@ int main(){
     initBoard();
     nextBlock = rand() % 7;
     b = nextBlock;
+    currentPiece = spawnBlock(b);
     currentPiece->setPos(getRandomX(currentPiece), 0);
     nextBlock = rand() % 7;
     int fallCounter = 0;
@@ -315,6 +329,7 @@ int main(){
                 }
                 b = nextBlock;
                 nextBlock = rand() % 7;
+                currentPiece = spawnBlock(b);
                 currentPiece->setPos(getRandomX(currentPiece), 0);
                 if (!currentPiece->canMove(0, 0)) {
                     draw();
