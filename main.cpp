@@ -10,12 +10,14 @@
 #define H 20
 #define W 15
 #define VIEWPORT_HEIGHT 20 
+HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
 using namespace std;
 
 const char BLOCK = char(219);
 int speed = 200, score = 0, nextBlock = -1, b;
 char board[H][W] = {};
+int boardcolor[H][W] = {};
 
 void enableRawMode() {
     HANDLE hIn = GetStdHandle(STD_INPUT_HANDLE);
@@ -30,6 +32,7 @@ class Block {
 protected:
     int rotation;
     int x,y;
+    int color;
 public:
     Block() : rotation(0), x(4), y(0) {}
     virtual ~Block() {}
@@ -38,6 +41,7 @@ public:
     void setRotation(int r) { rotation = r % 4; }
     int getX() { return x; }
     int getY() { return y; }
+    int getColor() { return color; };
     int getRotation() { return rotation;}
     virtual char getBlock(int r, int c) = 0;
 
@@ -190,13 +194,64 @@ Block* spawnBlock(int type) {
         case 3: return new BlockS();
         case 4: return new BlockZ();
         case 5: return new BlockJ();
-        caseSỐ " << score << "        Next: ";
+        case 6: return new BlockL();
+        default: return new BlockI();
+    }
+}
+
+Block* currentPiece = nullptr;
+
+void gotoxy(int x, int y) {
+    COORD c = {(SHORT)x, (SHORT)y};
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c);
+}
+
+void initBoard(){
+    for (int i = 0 ; i < H ; i++){
+        for (int j = 0 ; j < W ; j++){
+            if(i == H-1) {
+                if(j==0) board[i][j] = char(200);
+                else if(j==W-1) board[i][j] = char(188);
+                else board[i][j] = char(205);
+            }
+            else if ((j == 0) || (j == W-1))
+                board[i][j] = char(186);
+            else
+                board[i][j] = ' ';
+        }
+    }
+}
+ 
+void draw() {
+    gotoxy(0, 0); 
+    int currentColor = -1; 
+
+    for (int i = 0; i < H; i++) {
+        for (int j = 0; j < W; j++) {
+            int pixelColor = 7; 
+            if (board[i][j] == BLOCK) {
+                pixelColor = (boardcolor[i][j] != -1) ? boardcolor[i][j] : currentPiece->getColor();
+            } 
+            else if (board[i][j] != ' ') {
+                if (currentPiece != nullptr) pixelColor = currentPiece->getColor();
+            }
+            if (pixelColor != currentColor) {
+                SetConsoleTextAttribute(hConsole, pixelColor);
+                currentColor = pixelColor;
+            }
+
+            if (board[i][j] == ' ') cout << "  ";
+            else cout << board[i][j] << board[i][j];
+        }
+        cout << "\n";
+    }
+    cout << "DIEMSO:  " << score << "        Next: ";
     char nextBlockName[] = {'I', 'O', 'T', 'S', 'Z', 'J', 'L'};
     if (nextBlock >= 0 && nextBlock < 7) {
         cout << nextBlockName[nextBlock];
     }
     cout << "\n";
-    cout << "Controls: A/D=Move  S=Down  W=Rotate  Q=Quit\n";
+    cout << "Controls: A/D=Move  S=Down  W=Rotate  Q=Quit  Space=Hard drop\n";
     cout.flush();
 }
 void removeLine(){
@@ -222,6 +277,14 @@ void removeLine(){
             i++; 
     }
     
+}
+
+void setUpBoardColor() {
+    for (int i = 0; i < H; i++) {
+        for (int j = 0; j < W; j++) {
+            boardcolor[i][j] = -1;
+        }
+    }
 }
 
 int getRandomX(Block* p) {
