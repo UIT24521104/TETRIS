@@ -323,6 +323,9 @@ int main(){
                     currentPiece->setPos(currentPiece->getX(), currentPiece->getY() + 1);
                 }
             }
+            else if (c == 'w') {
+                currentPiece->rotate();;
+            }
             else if (c == 'q') {
                 gameOver = true;
                 break;
