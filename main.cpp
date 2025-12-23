@@ -388,6 +388,11 @@ int main(){
             else if (c == 'w') {
                 currentPiece->rotate();;
             }
+            else if (c == 32) {
+                while (currentPiece->canMove(0, 1)) {
+                    currentPiece->setPos(currentPiece->getX(), currentPiece->getY() + 1);
+                }
+            }
             else if (c == 'q') {
                 gameOver = true;
                 break;
