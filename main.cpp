@@ -62,6 +62,8 @@ public:
                     int tx = x + j;
                     if (ty >= 0 && ty < H && tx >= 1 && tx < W - 1) {
                         board[ty][tx] = erase ? ' ' : BLOCK;
+                        if (!erase) boardcolor[ty][tx] = color; 
+                        else boardcolor[ty][tx] = -1;
                     }
                 }
             }
@@ -282,7 +284,7 @@ void draw() {
         }
         cout << "\n";
     }
-    cout << "DIEMSO:  " << score << "        Next: ";
+    cout << "Score:  " << score << "        Next: ";
     char nextBlockName[] = {'I', 'O', 'T', 'S', 'Z', 'J', 'L'};
     if (nextBlock >= 0 && nextBlock < 7) {
         cout << nextBlockName[nextBlock];
@@ -364,7 +366,7 @@ int main(){
     int fallCounter = 0;
     bool gameOver = false;
     while (!gameOver){
-        currentPiece->updateOnBoard(true);;
+        currentPiece->updateOnBoard(true);
         if (_kbhit()){
             unsigned char ch = _getch();
             char c = tolower(ch);
