@@ -245,7 +245,7 @@ void draw() {
         }
         cout << "\n";
     }
-    cout << "Score: " << score << "        Next: ";
+    cout << "DIEMSO:  " << score << "        Next: ";
     char nextBlockName[] = {'I', 'O', 'T', 'S', 'Z', 'J', 'L'};
     if (nextBlock >= 0 && nextBlock < 7) {
         cout << nextBlockName[nextBlock];
