@@ -3,31 +3,21 @@
 #include <windows.h>
 #include <ctime>
 #include <cstdlib>
-#include <string>
-#include <cctype>
-#include <algorithm> 
 
 #define H 20
 #define W 15
 #define VIEWPORT_HEIGHT 20 
+
 HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
-using namespace std;
-
 const char BLOCK = char(219);
-int speed = 200, score = 0, nextBlock = -1, b;
+int times = 4, score = 0, nextBlock = -1, b;
 char board[H][W] = {};
 int boardcolor[H][W] = {};
 
-void enableRawMode() {
-    HANDLE hIn = GetStdHandle(STD_INPUT_HANDLE);
-    DWORD mode = 0;
-    GetConsoleMode(hIn, &mode);
-    mode &= ~(ENABLE_LINE_INPUT | ENABLE_ECHO_INPUT);
-    mode &= ~ENABLE_QUICK_EDIT_MODE;
-    SetConsoleMode(hIn, mode);
-}
+using namespace std;
 
+// --- LỚP CHA BLOCK ---
 class Block {
 protected:
     int rotation;
@@ -42,9 +32,8 @@ public:
     void setRotation(int r) { rotation = r % 4; }
     int getX() { return x; }
     int getY() { return y; }
+    int getRotation() { return rotation; }
     int getColor() { return color; };
-    int getRotation() { return rotation;}
-    virtual char getBlock(int r, int c) = 0;
 
     void applyColor() const {
         SetConsoleTextAttribute(hConsole, color);
@@ -53,6 +42,8 @@ public:
     static void resetColor() {
         SetConsoleTextAttribute(hConsole, 7);
     }
+
+    virtual char getBlock(int r, int c) = 0;
 
     void updateOnBoard(bool erase = false) {
         for (int i = 0; i < 4; i++) {
@@ -87,8 +78,7 @@ public:
     bool canRotate() {
         int nextRotation = (rotation + 1) % 4;
         int oldRotation = rotation;
-        rotation = nextRotation;
-
+        rotation = nextRotation; 
         bool possible = true;
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -102,7 +92,7 @@ public:
                 }
             }
         }
-        rotation = oldRotation;
+        rotation = oldRotation; 
         return possible;
     }
 
@@ -111,7 +101,7 @@ public:
             rotation = (rotation + 1) % 4;
         }
     }
-
+    
     int getMaxCol() {
         int maxCol = -1;
         for (int i = 0; i < 4; i++) {
@@ -260,14 +250,14 @@ void initBoard(){
         }
     }
 }
- 
+
 void draw() {
     gotoxy(0, 0); 
-    int currentColor = -1; 
+    int currentColor = -1;
 
     for (int i = 0; i < H; i++) {
         for (int j = 0; j < W; j++) {
-            int pixelColor = 7; 
+            int pixelColor = 7;
             if (board[i][j] == BLOCK) {
                 pixelColor = (boardcolor[i][j] != -1) ? boardcolor[i][j] : currentPiece->getColor();
             } 
@@ -284,7 +274,8 @@ void draw() {
         }
         cout << "\n";
     }
-    cout << "Score:  " << score << "        Next: ";
+
+    cout << "Score: " << score << "        Next: ";
     char nextBlockName[] = {'I', 'O', 'T', 'S', 'Z', 'J', 'L'};
     if (nextBlock >= 0 && nextBlock < 7) {
         cout << nextBlockName[nextBlock];
@@ -314,6 +305,7 @@ void removeLine(){
                 board[0][j] = ' ';
             }
             score += 100;
+            if(score % 200 == 0) times++;
             i++;  
         }
     }
@@ -345,20 +337,18 @@ bool isGameOver() {
 }
 
 
-int main(){
-    enableRawMode();
+int main() {
     system("chcp 437 >nul");
-    SetConsoleOutputCP(437);
+    
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO cursorInfo;
     GetConsoleCursorInfo(hOut, &cursorInfo);
     cursorInfo.bVisible = FALSE;
     SetConsoleCursorInfo(hOut, &cursorInfo);
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    system("cls");
+
     srand((unsigned)time(0));
     initBoard();
+    setUpBoardColor();
     b = rand() % 7;
     currentPiece = spawnBlock(b);
     currentPiece->setPos(getRandomX(currentPiece), 0);
@@ -399,7 +389,7 @@ int main(){
             }
         }
         fallCounter++;
-        if (fallCounter >= speed / 15) {
+        if (fallCounter >= 50/times) {
             if (currentPiece->canMove(0, 1)) {
                 currentPiece->setPos(currentPiece->getX(), currentPiece->getY() + 1);
             }
