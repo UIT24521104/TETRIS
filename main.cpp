@@ -157,7 +157,7 @@ char BlockO::data[4][4][4] = {
 class BlockT : public Block {
     static char data[4][4][4];
 public:
-    BlockT() : Block() {}
+    BlockT() : Block(14) {}
     char getBlock(int r, int c) override { return data[rotation][r][c]; }
 };
 char BlockT::data[4][4][4] = {
@@ -171,7 +171,7 @@ char BlockT::data[4][4][4] = {
 class BlockS : public Block {
     static char data[4][4][4];
 public:
-    BlockS() : Block() {}
+    BlockS() : Block(13) {}
     char getBlock(int r, int c) override { return data[rotation][r][c]; }
 };
 char BlockS::data[4][4][4] = {
@@ -185,7 +185,7 @@ char BlockS::data[4][4][4] = {
 class BlockZ : public Block {
     static char data[4][4][4];
 public:
-    BlockZ() : Block() {}
+    BlockZ() : Block(6) {}
     char getBlock(int r, int c) override { return data[rotation][r][c]; }
 };
 char BlockZ::data[4][4][4] = {
@@ -199,7 +199,7 @@ char BlockZ::data[4][4][4] = {
 class BlockJ : public Block {
     static char data[4][4][4];
 public:
-    BlockJ() : Block() {}
+    BlockJ() : Block(4) {}
     char getBlock(int r, int c) override { return data[rotation][r][c]; }
 };
 char BlockJ::data[4][4][4] = {
@@ -213,7 +213,7 @@ char BlockJ::data[4][4][4] = {
 class BlockL : public Block {
     static char data[4][4][4];
 public:
-    BlockL() : Block() {}
+    BlockL() : Block(7) {}
     char getBlock(int r, int c) override { return data[rotation][r][c]; }
 };
 char BlockL::data[4][4][4] = {
