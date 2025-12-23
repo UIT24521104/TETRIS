@@ -91,6 +91,12 @@ public:
         return possible;
     }
 
+    void rotate() {
+        if (canRotate()) {
+            rotation = (rotation + 1) % 4;
+        }
+    }
+
     int getMaxCol() {
         int maxCol = -1;
         for (int i = 0; i < 4; i++) {
