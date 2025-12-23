@@ -46,6 +46,14 @@ public:
     int getRotation() { return rotation;}
     virtual char getBlock(int r, int c) = 0;
 
+    void applyColor() const {
+        SetConsoleTextAttribute(hConsole, color);
+    }
+
+    static void resetColor() {
+        SetConsoleTextAttribute(hConsole, 7);
+    }
+
     void updateOnBoard(bool erase = false) {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -135,7 +143,7 @@ char BlockI::data[4][4][4] = {
 class BlockO : public Block {
     static char data[4][4][4];
 public:
-    BlockO() : Block() {} 
+    BlockO() : Block(15) {} 
     char getBlock(int r, int c) override { return data[rotation][r][c]; }
 };
 char BlockO::data[4][4][4] = {
