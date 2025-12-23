@@ -34,6 +34,23 @@ protected:
 public:
     Block() : rotation(0) {}
     virtual ~Block() {}
+    virtual char getBlock(int r, int c) = 0;
+};
+
+// --- CÁC LỚP CON VỚI KHỞI TẠO STATIC BÊN NGOÀI ---
+
+// Block I
+class BlockI : public Block {
+    static char data[4][4][4];
+public:
+    BlockI() : Block() {} 
+    char getBlock(int r, int c) override { return data[rotation][r][c]; }
+};
+char BlockI::data[4][4][4] = {
+    {{' ',BLOCK,' ',' '}, {' ',BLOCK,' ',' '}, {' ',BLOCK,' ',' '}, {' ',BLOCK,' ',' '}},
+    {{' ',' ',' ',' '}, {BLOCK,BLOCK,BLOCK,BLOCK}, {' ',' ',' ',' '}, {' ',' ',' ',' '}},
+    {{' ',BLOCK,' ',' '}, {' ',BLOCK,' ',' '}, {' ',BLOCK,' ',' '}, {' ',BLOCK,' ',' '}},
+    {{' ',' ',' ',' '}, {BLOCK,BLOCK,BLOCK,BLOCK}, {' ',' ',' ',' '}, {' ',' ',' ',' '}}
 };
 
 char blocks[7][4][4][4] = {
