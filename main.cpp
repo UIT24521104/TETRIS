@@ -190,44 +190,7 @@ Block* spawnBlock(int type) {
         case 3: return new BlockS();
         case 4: return new BlockZ();
         case 5: return new BlockJ();
-        case 6: return new BlockL();
-        default: return new BlockI();
-    }
-}
-
-Block* currentPiece = nullptr;
-
-void gotoxy(int x, int y) {
-    COORD c = {(SHORT)x, (SHORT)y};
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c);
-}
-
-void initBoard(){
-    for (int i = 0 ; i < H ; i++){
-        for (int j = 0 ; j < W ; j++){
-            if(i == H-1) {
-                if(j==0) board[i][j] = char(200);
-                else if(j==W-1) board[i][j] = char(188);
-                else board[i][j] = char(205);
-            }
-            else if ((j == 0) || (j == W-1))
-                board[i][j] = char(186);
-            else
-                board[i][j] = ' ';
-        }
-    }
-}
-
-void draw(){
-    system("cls");
-    for (int i = 0; i < VIEWPORT_HEIGHT && i < H; i++){
-        for (int j = 0; j < W; j++){
-            cout << board[i][j] << board[i][j];
-        }
-        cout << "\n";
-    } 
-    cout << "\n";
-    cout << "Score: " << score << "        Next: ";
+        caseSỐ " << score << "        Next: ";
     char nextBlockName[] = {'I', 'O', 'T', 'S', 'Z', 'J', 'L'};
     if (nextBlock >= 0 && nextBlock < 7) {
         cout << nextBlockName[nextBlock];
