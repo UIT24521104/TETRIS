@@ -31,10 +31,11 @@ void enableRawMode() {
 class Block {
 protected:
     int rotation;
-    int x,y;
     int color;
+    int x, y; 
+
 public:
-    Block() : rotation(0), x(4), y(0) {}
+    Block(int c) : rotation(0), color(c), x(4), y(0) {}
     virtual ~Block() {}
 
     void setPos(int nx, int ny) { x = nx; y = ny; }
@@ -45,6 +46,14 @@ public:
     int getRotation() { return rotation;}
     virtual char getBlock(int r, int c) = 0;
 
+    void applyColor() const {
+        SetConsoleTextAttribute(hConsole, color);
+    }
+
+    static void resetColor() {
+        SetConsoleTextAttribute(hConsole, 7);
+    }
+
     void updateOnBoard(bool erase = false) {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -53,6 +62,8 @@ public:
                     int tx = x + j;
                     if (ty >= 0 && ty < H && tx >= 1 && tx < W - 1) {
                         board[ty][tx] = erase ? ' ' : BLOCK;
+                        if (!erase) boardcolor[ty][tx] = color; 
+                        else boardcolor[ty][tx] = -1;
                     }
                 }
             }
@@ -120,7 +131,7 @@ public:
 class BlockI : public Block {
     static char data[4][4][4];
 public:
-    BlockI() : Block() {} 
+    BlockI() : Block(12) {} 
     char getBlock(int r, int c) override { return data[rotation][r][c]; }
 };
 char BlockI::data[4][4][4] = {
@@ -134,7 +145,7 @@ char BlockI::data[4][4][4] = {
 class BlockO : public Block {
     static char data[4][4][4];
 public:
-    BlockO() : Block() {} 
+    BlockO() : Block(15) {} 
     char getBlock(int r, int c) override { return data[rotation][r][c]; }
 };
 char BlockO::data[4][4][4] = {
@@ -148,7 +159,7 @@ char BlockO::data[4][4][4] = {
 class BlockT : public Block {
     static char data[4][4][4];
 public:
-    BlockT() : Block() {}
+    BlockT() : Block(14) {}
     char getBlock(int r, int c) override { return data[rotation][r][c]; }
 };
 char BlockT::data[4][4][4] = {
@@ -162,7 +173,7 @@ char BlockT::data[4][4][4] = {
 class BlockS : public Block {
     static char data[4][4][4];
 public:
-    BlockS() : Block() {}
+    BlockS() : Block(13) {}
     char getBlock(int r, int c) override { return data[rotation][r][c]; }
 };
 char BlockS::data[4][4][4] = {
@@ -176,7 +187,7 @@ char BlockS::data[4][4][4] = {
 class BlockZ : public Block {
     static char data[4][4][4];
 public:
-    BlockZ() : Block() {}
+    BlockZ() : Block(6) {}
     char getBlock(int r, int c) override { return data[rotation][r][c]; }
 };
 char BlockZ::data[4][4][4] = {
@@ -190,7 +201,7 @@ char BlockZ::data[4][4][4] = {
 class BlockJ : public Block {
     static char data[4][4][4];
 public:
-    BlockJ() : Block() {}
+    BlockJ() : Block(4) {}
     char getBlock(int r, int c) override { return data[rotation][r][c]; }
 };
 char BlockJ::data[4][4][4] = {
@@ -204,7 +215,7 @@ char BlockJ::data[4][4][4] = {
 class BlockL : public Block {
     static char data[4][4][4];
 public:
-    BlockL() : Block() {}
+    BlockL() : Block(7) {}
     char getBlock(int r, int c) override { return data[rotation][r][c]; }
 };
 char BlockL::data[4][4][4] = {
@@ -273,7 +284,7 @@ void draw() {
         }
         cout << "\n";
     }
-    cout << "DIEMSO:  " << score << "        Next: ";
+    cout << "Score:  " << score << "        Next: ";
     char nextBlockName[] = {'I', 'O', 'T', 'S', 'Z', 'J', 'L'};
     if (nextBlock >= 0 && nextBlock < 7) {
         cout << nextBlockName[nextBlock];
@@ -282,29 +293,30 @@ void draw() {
     cout << "Controls: A/D=Move  S=Down  W=Rotate  Q=Quit  Space=Hard drop\n";
     cout.flush();
 }
+
 void removeLine(){
-    for (int i = H - 2; i >= 1; i--) {
+    for (int i = H - 2; i >= 1; i--){
         bool full = true;
-        for (int j = 1; j < W - 1; j++) {
+        for (int j = 1; j < W - 1; j++){
             if (board[i][j] != BLOCK) {
                 full = false;
                 break;
             }
         }
-
-    }
-    if (full) {
-            for (int k = i; k > 0; k--) {
-                for (int j = 1; j < W - 1; j++) {
+        if (full) {
+            for (int k = i; k > 0; k--){
+                for (int j = 1; j < W - 1; j++){
                     board[k][j] = board[k - 1][j];
+                    boardcolor[k][j] = boardcolor[k - 1][j];
                 }
             }
-            for (int j = 1; j < W - 1; j++)
+            for (int j = 1; j < W - 1; j++){
                 board[0][j] = ' ';
+            }
             score += 100;
-            i++; 
+            i++;  
+        }
     }
-    
 }
 
 void setUpBoardColor() {
@@ -354,7 +366,7 @@ int main(){
     int fallCounter = 0;
     bool gameOver = false;
     while (!gameOver){
-        currentPiece->updateOnBoard(true);;
+        currentPiece->updateOnBoard(true);
         if (_kbhit()){
             unsigned char ch = _getch();
             char c = tolower(ch);
