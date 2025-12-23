@@ -183,36 +183,6 @@ void initBoard(){
     }
 }
 
-
-
-void boardDelBlock(){
-    for (int i = 0 ; i < 4 ; i++){
-        for (int j = 0 ; j < 4 ; j++){
-            if (blocks[b][rotation][i][j] != ' '){
-                int ty = y + i;
-                int tx = x + j;
-                if (ty >= 0 && ty < H && tx >= 1 && tx < W-1){
-                    board[ty][tx] = ' ';
-                }
-            }
-        }
-    }
-}
-
-void block2Board(){
-    for (int i = 0 ; i < 4 ; i++){
-        for (int j = 0 ; j < 4 ; j++){
-            if (blocks[b][rotation][i][j] != ' '){
-                int ty = y + i;
-                int tx = x + j;
-                if (ty >= 0 && ty < H && tx >= 1 && tx < W-1){
-                    board[ty][tx] = BLOCK;
-                }
-            }
-        }
-    }
-}
-
 void draw(){
     system("cls");
     for (int i = 0; i < VIEWPORT_HEIGHT && i < H; i++){
@@ -232,54 +202,6 @@ void draw(){
     cout.flush();
 }
 
-bool canMove(int dx, int dy){
-    for (int i = 0 ; i < 4 ; i++){
-        for (int j = 0 ; j < 4 ; j++){
-            if (blocks[b][rotation][i][j] != ' '){
-                int tx = x + j + dx;
-                int ty = y + i + dy;
-                if (tx < 1 || tx >= W-1 || ty >= H-1) return false;
-                if (ty >= 0 && (board[ty][tx] == char(35) || board[ty][tx] == BLOCK)) return false;
-            }
-        }
-    }
-    return true;
-}
-
-bool canRotate(int newRotation) {
-for (int i = 0 ; i < 4 ; i++){
-        for (int j = 0 ; j < 4 ; j++){
-            if (blocks[b][newRotation][i][j] != ' '){
-                int tx = x + j;
-                int ty = y + i;
-                if (tx < 1 || tx >= W-1 || ty >= H-1) return false;
-                if (ty >= 0 && (board[ty][tx] == '#' || board[ty][tx] == BLOCK))
-                    return false;
-            }
-        }
-    }
-    return true;
-}
-
-void rotateBlock() {
-    int newRotation = (rotation + 1) % 4;
-    if (canRotate(newRotation)) {
-        rotation = newRotation;
-    }
-}
-
-int getBlockMaxCol(int blockIndex) {
-    int maxCol = -1;
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
-            if (blocks[blockIndex][0][i][j] != ' ') {
-                maxCol = max(maxCol, j);
-            }
-        }
-    }
-    return maxCol + 1;
-}
-
 int getRandomX(int blockIndex) {
     int blockMaxCol = getBlockMaxCol(blockIndex);
     int maxX = W - 1 - blockMaxCol;
@@ -294,30 +216,6 @@ bool isGameOver() {
         }
     }
     return false;
-}
-void removeLine() {
-    for (int i = H - 2; i >= 1; i--) {
-        bool full = true;
-        for (int j = 1; j < W - 1; j++) {
-            if (board[i][j] != BLOCK) {
-                full = false;
-                break;
-            }
-        }
-        if (full) {
-            for (int k = i; k > 0; k--) {
-                for (int j = 1; j < W - 1; j++) {
-                    board[k][j] = board[k - 1][j];
-                }
-            }
-            for (int j = 1; j < W - 1; j++) {
-                board[0][j] = ' ';
-            }
-            score += 100;
-            i++;
-        }
-    }
-
 }
 
 
@@ -357,9 +255,6 @@ int main(){
             else if (c == 's') {
                 if (canMove(0, 1)) y++;
             }
-            else if (c == 'w') {
-                rotateBlock();
-            }
             else if (c == 'q') {
                 gameOver = true;
                 break;
@@ -372,7 +267,6 @@ int main(){
             }
             else {
                 block2Board();
-                removeLine();
                 if (isGameOver()) {
                     draw();
                     cout << "\n========== GAME OVER ==========" << endl;
