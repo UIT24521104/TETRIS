@@ -303,7 +303,6 @@ void removeLine(){
                 board[0][j] = ' ';
             }
             score += 100;
-            if(score % 200 == 0) times++;
             i++;  
         }
     }
