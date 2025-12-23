@@ -14,9 +14,8 @@
 using namespace std;
 
 const char BLOCK = char(219);
-int speed = 200;
+int speed = 200, score = 0, nextBlock = -1, b;
 char board[H][W] = {};
-int score = 0;
 
 void enableRawMode() {
     HANDLE hIn = GetStdHandle(STD_INPUT_HANDLE);
@@ -185,10 +184,6 @@ Block* spawnBlock(int type) {
 }
 
 Block* currentPiece = nullptr;
-
-int x = 4, y = 0, b = 1;
-int rotation = 0;
-int nextBlock = -1;
 
 void gotoxy(int x, int y) {
     COORD c = {(SHORT)x, (SHORT)y};
