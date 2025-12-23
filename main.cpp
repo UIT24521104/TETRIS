@@ -41,6 +41,7 @@ public:
     void setRotation(int r) { rotation = r % 4; }
     int getX() { return x; }
     int getY() { return y; }
+    int getColor() { return color; };
     int getRotation() { return rotation;}
     virtual char getBlock(int r, int c) = 0;
 
