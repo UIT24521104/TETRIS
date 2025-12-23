@@ -218,6 +218,10 @@ void initBoard(){
     }
 }
 
+
+
+
+
 void draw(){
     system("cls");
     for (int i = 0; i < VIEWPORT_HEIGHT && i < H; i++){
