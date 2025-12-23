@@ -41,7 +41,7 @@ public:
     int getY() { return y; }
     int getRotation() { return rotation;}
     virtual char getBlock(int r, int c) = 0;
-    
+
     void updateOnBoard(bool erase = false) {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -54,6 +54,20 @@ public:
                 }
             }
         }
+    }
+
+    bool canMove(int dx, int dy) {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (getBlock(i, j) != ' ') {
+                    int tx = x + j + dx;
+                    int ty = y + i + dy;
+                    if (tx < 1 || tx >= W - 1 || ty >= H - 1) return false;
+                    if (ty >= 0 && board[ty][tx] == BLOCK) return false;
+                }
+            }
+        }
+        return true;
     }
 };
 
