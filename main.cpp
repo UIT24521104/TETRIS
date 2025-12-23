@@ -32,6 +32,7 @@ class Block {
 protected:
     int rotation;
     int x,y;
+    int color;
 public:
     Block() : rotation(0), x(4), y(0) {}
     virtual ~Block() {}
