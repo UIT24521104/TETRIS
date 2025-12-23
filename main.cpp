@@ -41,6 +41,20 @@ public:
     int getY() { return y; }
     int getRotation() { return rotation;}
     virtual char getBlock(int r, int c) = 0;
+    
+    void updateOnBoard(bool erase = false) {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (getBlock(i, j) != ' ') {
+                    int ty = y + i;
+                    int tx = x + j;
+                    if (ty >= 0 && ty < H && tx >= 1 && tx < W - 1) {
+                        board[ty][tx] = erase ? ' ' : BLOCK;
+                    }
+                }
+            }
+        }
+    }
 };
 
 // --- CÁC LỚP CON VỚI KHỞI TẠO STATIC BÊN NGOÀI ---
