@@ -137,6 +137,21 @@ char BlockL::data[4][4][4] = {
     {{' ',' ',' ',' '}, {BLOCK,BLOCK,' ',' '}, {' ',BLOCK,' ',' '}, {' ',BLOCK,' ',' '}}
 };
 
+Block* spawnBlock(int type) {
+    switch (type) {
+        case 0: return new BlockI();
+        case 1: return new BlockO();
+        case 2: return new BlockT();
+        case 3: return new BlockS();
+        case 4: return new BlockZ();
+        case 5: return new BlockJ();
+        case 6: return new BlockL();
+        default: return new BlockI();
+    }
+}
+
+Block* currentPiece = nullptr;
+
 int x = 4, y = 0, b = 1;
 int rotation = 0;
 int nextBlock = -1;
